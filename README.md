@@ -245,6 +245,28 @@ To stop the hotkey call the `stop()` method.
 hotkey.stop()
 ```
 
+### Bindable Hotkey
+
+[GH-9]
+
+An expansion on the Hotkey class. Bindable_Hotkey creates a hotkey the same way as a normal hotkey, but allows for you to 
+bind functions to hotkeys. Adding a script is optional. Otherwise, the two hotkey classes function identically.
+
+```python
+from ahk import AHK, Bindable_Hotkey
+ahk = AHK()
+key_combo = "h"
+hotkey = Bindable_Hotkey(ahk, key_combo)
+hotkey.start()
+
+def hello():
+    print("Hello World")
+
+hotkey.bind(hello)
+```
+As with the Hotkey class, when hotkey.start() is called, the hotkey is active.
+If you press <kbd>h</kbd>, `Hello World` is printed in the console.
+
 
 ### ActionChain
 
