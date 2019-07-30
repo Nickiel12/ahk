@@ -1,16 +1,44 @@
 import ast
+import keyboard
 import warnings
 
 from ahk.script import ScriptEngine
-from ahk.utils import escape_sequence_replace
+from ahk.utils import escape_sequence_replace, make_logger
 from ahk.keys import Key
 from ahk.directives import InstallKeybdHook, InstallMouseHook
 
+logger = make_logger(__file__)
+
 class Hotkey:
-    def __init__(self, engine: ScriptEngine, hotkey: str, script: str):
-        self.hotkey = hotkey
-        self.script = script
+    
+    AHK_KEYBOARD_MAP = {
+        "!" : 'alt',
+        "^" : 'ctrl',
+        "+" : 'shift',
+        "#" : 'windows',
+        }
+    
+    def __init__(self, engine: ScriptEngine, hotkey: str, script='', ahk_hotkey_string = True):
+        self.hotkey = hotkey    
         self.engine = engine
+
+        if script != '':
+            self.script = script
+        else:
+            self.script = None
+
+    def _parse_hotkey(self, string):
+        new_string = []
+        for i in range(0, len(string)):
+            if i != 0:
+                new_string.append("+")
+            try:
+                new_string.append(self.AHK_KEYBOARD_MAP[string[i]])
+            except KeyError:
+                new_string.append(string[i])
+        hotkey_code = "".join(new_string)
+        logger.debug(hotkey_code)
+        return(hotkey_code)
 
     @property
     def running(self):
